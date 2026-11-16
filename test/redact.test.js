@@ -17,6 +17,13 @@ test('redacts a valid credit card but keeps a random 16-digit number that fails 
   assert.equal(redact('Order 1234567890123456'), 'Order 1234567890123456');
 });
 
+test('redacts a valid IBAN but keeps an IBAN-shaped string that fails the checksum', () => {
+  // Public example IBANs from ISO 13616 / bank documentation, not real accounts.
+  assert.equal(redact('Pay to DE89 3704 0044 0532 0130 00 today'), 'Pay to [IBAN] today');
+  assert.equal(redact('IBAN: GB82WEST12345698765432'), 'IBAN: [IBAN]');
+  assert.equal(redact('Product code AB12 CDEF GHIJ KLMN'), 'Product code AB12 CDEF GHIJ KLMN');
+});
+
 test('redacts GitHub, OpenAI and AWS-style keys', () => {
   assert.equal(redact('token ghp_abcdefghij1234567890'), 'token [TOKEN]');
   assert.equal(redact('key sk-abcdefghij1234567890abcd'), 'key [API_KEY]');

@@ -28,6 +28,22 @@ function luhnValid(digits) {
   return digits.length >= 13 && sum % 10 === 0;
 }
 
+// ISO 13616 mod-97 check: move the first 4 chars to the end, turn letters
+// into numbers (A=10 ... Z=35), and the result mod 97 must equal 1.
+function ibanValid(match) {
+  const iban = match.replace(/ /g, '');
+  if (iban.length < 15 || iban.length > 34) return false;
+  const rearranged = iban.slice(4) + iban.slice(0, 4);
+  let remainder = 0;
+  for (const ch of rearranged) {
+    const value = ch >= 'A' && ch <= 'Z' ? String(ch.charCodeAt(0) - 55) : ch;
+    for (const digit of value) {
+      remainder = (remainder * 10 + Number(digit)) % 97;
+    }
+  }
+  return remainder === 1;
+}
+
 const PATTERNS = [
   {
     name: 'urlPassword',
@@ -70,6 +86,14 @@ const PATTERNS = [
     name: 'jwt',
     label: '[TOKEN]',
     regex: /\beyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g,
+  },
+  {
+    name: 'iban',
+    label: '[IBAN]',
+    // DE89 3704 0044 0532 0130 00 or DE89370400440532013000. Mod-97 checked below.
+    // Runs before creditCard and phone so their patterns don't grab the digit groups.
+    regex: /\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){2,7}(?: ?[A-Z0-9]{1,3})?\b/g,
+    validate: ibanValid,
   },
   {
     name: 'creditCard',
