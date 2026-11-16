@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>redact-sensitive — Redact secrets from text and logs</title>
+<meta name="description" content="redact-sensitive is a zero-dependency Node.js library that redacts emails, phone numbers, API keys, credit cards and other sensitive data from text and logs before they leave your app.">
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:760px;margin:0 auto;padding:48px 20px;color:#111;line-height:1.6}
+h1{font-size:2.2rem;line-height:1.2}code{background:#f1f1f1;padding:2px 6px;border-radius:4px}
+pre{background:#111;color:#eee;padding:16px;border-radius:8px;overflow:auto}
+pre code{background:none;padding:0}
+a{color:#0b5fff}.cta{display:inline-block;background:#0b5fff;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;margin:8px 8px 0 0}
+table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px;text-align:left}
+</style>
+</head>
+<body>
+<h1>redact-sensitive</h1>
+<p><strong>Redact emails, phone numbers, API keys, credit cards and other sensitive data from text and logs — before they leave your app.</strong></p>
+<p>Zero dependencies. Node.js 16+. TypeScript types included.</p>
+<p><a class="cta" href="https://github.com/sharkohark1234/redact-sensitive">View on GitHub</a>
+<a class="cta" href="https://www.npmjs.com/package/redact-sensitive">View on npm</a></p>
+<h2>Install</h2>
+<pre><code>npm install redact-sensitive</code></pre>
+<h2>Try it</h2>
+<pre><code>const { redact } = require('redact-sensitive');
+
+redact('Contact me at ana@example.com or 555-123-4567');
+// 'Contact me at [EMAIL] or [PHONE]'
+
+redact('Card 4111 1111 1111 1111, key sk-abcdefghij1234567890abcd');
+// 'Card [CARD], key [API_KEY]'</code></pre>
+<h2>What it redacts</h2>
+<table>
+<tr><th>Type</th><th>Example</th></tr>
+<tr><td>Email</td><td>ana@example.com → [EMAIL]</td></tr>
+<tr><td>Phone</td><td>+1 555-123-4567 → [PHONE]</td></tr>
+<tr><td>Credit card</td><td>Luhn-validated → [CARD]</td></tr>
+<tr><td>API keys</td><td>GitHub, OpenAI, AWS, Slack tokens</td></tr>
+<tr><td>JWT &amp; private keys</td><td>eyJ… and PEM blocks</td></tr>
+<tr><td>SSN, IPv4, URL passwords</td><td>123-45-6789, 203.0.113.42, user:pass@host</td></tr>
+</table>
+<h2>Why</h2>
+<p>Logs, error reports and support tickets routinely leak the data they were meant to debug. One <code>console.log(user)</code> can put an email, a token or a card number into a log store. This library is a one-line safety net: run untrusted text through it before logging, storing or sending it anywhere.</p>
+<p><a href="https://github.com/sharkohark1234/redact-sensitive">Contribute on GitHub</a> — good first issues are welcome. MIT licensed.</p>
+</body>
+</html>
